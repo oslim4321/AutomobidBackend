@@ -30,7 +30,8 @@ const createUser = async (req, res) => {
   try {
     const subject = "Welcome to AutoMobid";
     const { userName, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const salt = await bcrypt.genSalt()
+    const hashedPassword = await bcrypt.hash(password, salt);
     const user = await User.create({
       userName,
       email,
