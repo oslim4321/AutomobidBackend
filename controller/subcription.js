@@ -9,10 +9,12 @@ const saveUserDetails = async (req, res) => {
     const subject = "Welcome to AutoMobid";
     const { email } = req.body;
     const user = await Subscriber.create({ email });
-    sendMail(user.email, subject, message); //send welcome mail to subscriber
-    res.status(200).json({ success: true });
+    if (user._id) {
+      sendMail(user.email, subject, message); //send welcome mail to subscriber
+      res.status(200).json({ success: true });
+    }
   } catch (error) {
-    let err = handleSubscriberErr(error)
+    let err = handleSubscriberErr(error);
     res.status(500).json(err);
   }
 };

@@ -33,13 +33,11 @@ module.exports.handleLoginErr = (err) => {
   return errors;
 };
 
-
-let subErr = {email:''}
-module.exports.handleSubscriberErr = (err)=>{
+let subErr = { email: "" };
+module.exports.handleSubscriberErr = (err) => {
   if (err.code === 11000 && err.keyPattern && err.keyPattern.email) {
-      subErr.email = 'Email already exists. Please use a different email address.'
+    subErr.email = "This email has already been subscribed.";
   }
 
-  return subErr
-
-}
+  return subErr;
+};
