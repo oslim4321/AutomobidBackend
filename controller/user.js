@@ -9,8 +9,8 @@ const createToken = (email, id) => {
   // Convert id to string if it's an ObjectId
   const stringId = id instanceof ObjectId ? id.toString() : id;
   const accessToken = jwt.sign(
-    { email, id: stringId },
-    process.env.ACCESS_TOKEN_SECRET
+    { email, id: stringId},
+    process.env.ACCESS_TOKEN_SECRET, {expiresIn:'1d'}
   );
   return accessToken;
 };
@@ -24,9 +24,9 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-const getUserById = async (req, res) => {
+const getUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.user;
     const user = await User.findById(id).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -64,4 +64,6 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, createUser, createToken };
+module.exports = { getAllUsers, getUser, createUser, createToken };
+
+
