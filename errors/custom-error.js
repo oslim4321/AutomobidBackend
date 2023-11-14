@@ -24,12 +24,9 @@ module.exports.handleErr = (err) => {
 module.exports.handleLoginErr = (err) => {
   if (err.message === "Incorrect Email") {
     errors.email = "Incorrect Email";
-  }
-  if (err.message === "Incorrect password") {
+  } else if (err.message === "Incorrect password") {
     errors.password = "Incorrect password";
   }
-  /* Login err End*/
-
   return errors;
 };
 

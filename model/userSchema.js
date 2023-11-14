@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt");
 const { Schema } = mongoose;
 
 const userSchema = Schema(
@@ -29,23 +29,17 @@ const userSchema = Schema(
   { timestamps: true }
 );
 
-
-userSchema.statics.login = async function(email, password){
-  try {
-    const user = await this.findOne({email})
-    if (user) {
-      const passwordCheck = await bcrypt.compare(password,user.password)
-      if (passwordCheck) {
-        return user
-      } 
-      throw Error('Invalid credentials')
-    }
-    throw Error('Invalid credentials')
-  
-  } catch (error) {
-    console.log(error);    
+userSchema.statics.login = async function (email, password) {
+  const user = await this.findOne({ email });
+  if (!user) {
+    throw new Error("Incorrect Email");
   }
-}
+  const passwordCheck = await bcrypt.compare(password, user.password);
+  if (!passwordCheck) {
+    throw new Error("Incorrect password");
+  }
+  return user;
+};
 
 const User = mongoose.model("User", userSchema);
 

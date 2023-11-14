@@ -9,10 +9,11 @@ dotenv.config();
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const loginTask = await User.login(email, password);
-    const accessToken = createToken(email, loginTask._id);
-    res.status(201).json({ success: true, accessToken, id: loginTask._id });
+    const user = await User.login(email, password);
+    const accessToken = createToken(email, user._id);
+    res.status(200).json({ success: true, accessToken, id: user._id });
   } catch (error) {
+    console.error(error.message);
     const err = handleLoginErr(error);
     res.status(500).json(err);
   }
