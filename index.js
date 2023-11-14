@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const router = require("./view/user");
 const subscriberRouter = require("./view/subscriber");
+const { connectDB } = require("./db/connectDB");
 
 dotenv.config();
 
@@ -15,12 +16,11 @@ app.use(cors());
 app.use("/api/v1", router);
 app.use("/api/v1/launch", subscriberRouter);
 
-const port = process.env.PORT || 5000;
-const mongoUrl = process.env.MONGODB_URL;
+const port = process.env.PORT || 5001;
 
 app.listen(port, async (req, res) => {
   try {
-    await mongoose.connect(mongoUrl);
+    await connectDB()
     console.log("App is listening on port :", port);
   } catch (error) {
     console.log(error.message);
