@@ -4,13 +4,12 @@ const Subscriber = require("../model/subscribersSchema");
 
 const saveUserDetails = async (req, res) => {
   try {
-    const message = `Hi,
-    Welcome to AutoMotoBids! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
+    const message = `Welcome to AutoMotoBids! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
     const subject = "Welcome to AutoMobid";
     const { email } = req.body;
     const user = await Subscriber.create({ email });
     if (user._id) {
-      sendMail(user.email, subject, message); //send welcome mail to subscriber
+      sendMail(user.email, subject,user.userName ,message); //send welcome mail to subscriber
       res.status(200).json({ success: true });
     }
   } catch (error) {
