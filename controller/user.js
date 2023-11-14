@@ -37,6 +37,7 @@ const getUserById = async (req, res) => {
   }
 };
 
+
 const createUser = async (req, res) => {
   try {
     const subject = "Welcome to AutoMobid";
@@ -49,9 +50,8 @@ const createUser = async (req, res) => {
       password: hashedPassword,
     });
     if (user) {
-      const message = `Hi ${user.userName},
-           Welcome to AutoMotoBids! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
-      sendMail(user.email, subject, message); //send welcome mail to newly created user
+      const message = `Welcome to AutoMotoBids! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
+      sendMail(user.email, subject, user.userName ,message); //send welcome mail to newly created user
       const loginTask = User.login(email,password)
       const accessToken = createToken(email, user._id)
       res.status(201).json({ success: true, accessToken, id: user._id.toString() });
@@ -64,3 +64,5 @@ const createUser = async (req, res) => {
 };
 
 module.exports = { getAllUsers, getUserById, createUser, createToken };
+
+
