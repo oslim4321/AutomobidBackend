@@ -5,9 +5,9 @@ const { authenticateToken } = require('../middleware/verifyToken')
 
 const UserRoute = express.Router()
 
-router.get('/user', authenticateToken ,getAllUsers)
-router.get('/user/:id', authenticateToken ,getUserById)
-router.post('/user', createUser)
-router.post('/login', loginUser)
+UserRoute.get('/user', authenticateToken ,getAllUsers)
+UserRoute.get('/user/:id', authenticateToken ,getUserById)
+UserRoute.post('/user', createUser)
+UserRoute.post('/login', loginUser)
 
 module.exports = UserRoute
