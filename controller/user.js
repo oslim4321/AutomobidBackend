@@ -1,7 +1,19 @@
 const User = require("../model/userSchema");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken')
 const { sendMail } = require("../mailer/mail");
 const { handleErr } = require("../errors/custom-error");
+const { ObjectId } = require('mongodb');
+
+const createToken = (email, id)=>{
+  // Convert id to string if it's an ObjectId
+  const stringId = id instanceof ObjectId ? id.toString() : id;
+  const accessToken = jwt.sign(
+    { email, id: stringId},
+    process.env.ACCESS_TOKEN_SECRET
+  );
+  return accessToken
+}
 
 const getAllUsers = async (req, res) => {
   try {
@@ -26,7 +38,6 @@ const getUserById = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  console.log("djdjjd");
   try {
     const subject = "Welcome to AutoMobid";
     const { userName, email, password } = req.body;
@@ -41,7 +52,9 @@ const createUser = async (req, res) => {
       const message = `Hi ${user.userName},
            Welcome to AutoMotoBids! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
       sendMail(user.email, subject, message); //send welcome mail to newly created user
-      res.status(201).json({ success: true });
+      const loginTask = User.login(email,password)
+      const accessToken = createToken(email, user._id)
+      res.status(201).json({ success: true, accessToken, id: user._id.toString() });
     }
   } catch (error) {
     console.log(error);
@@ -50,4 +63,4 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, createUser };
+module.exports = { getAllUsers, getUserById, createUser, createToken };
