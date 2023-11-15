@@ -54,7 +54,7 @@ const createUser = async (req, res) => {
       password: hashedPassword,
     });
     const subject = "Welcome to AutoMobid";
-    const message = `Welcome to AutoMotoBids, ${user.userName}! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
+    const message = `Welcome to AutoMotoBids! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
     sendMail(user.email, subject, user.userName, message);
     const accessToken = createToken(email, user._id);
     res
