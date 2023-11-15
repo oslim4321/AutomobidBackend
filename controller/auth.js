@@ -1,6 +1,4 @@
 const User = require("../model/userSchema");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const { handleLoginErr } = require("../errors/custom-error");
 const { createToken } = require("./user");
