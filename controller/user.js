@@ -9,8 +9,9 @@ const createToken = (email, id) => {
   // Convert id to string if it's an ObjectId
   const stringId = id instanceof ObjectId ? id.toString() : id;
   const accessToken = jwt.sign(
-    { email, id: stringId},
-    process.env.ACCESS_TOKEN_SECRET, {expiresIn:'1d'}
+    { email, id: stringId },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "1d" }
   );
   return accessToken;
 };
@@ -39,8 +40,12 @@ const getUser = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const subject = "Welcome to AutoMobid";
     const { userName, email, password } = req.body;
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: "User already exists." });
+    }
+
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     const user = await User.create({
@@ -48,15 +53,13 @@ const createUser = async (req, res) => {
       email,
       password: hashedPassword,
     });
-    if (user) {
-      const message = `Welcome to AutoMotoBids! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
-      sendMail(user.email, subject, user.userName, message); //send welcome mail to newly created user
-      const loginTask = User.login(email, password);
-      const accessToken = createToken(email, user._id);
-      res
-        .status(201)
-        .json({ success: true, accessToken, id: user._id.toString() });
-    }
+    const subject = "Welcome to AutoMobid";
+    const message = `Welcome to AutoMotoBids, ${user.userName}! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
+    sendMail(user.email, subject, user.userName, message);
+    const accessToken = createToken(email, user._id);
+    res
+      .status(201)
+      .json({ success: true, accessToken, id: user._id.toString() });
   } catch (error) {
     console.log(error);
     let err = handleErr(error);
@@ -65,5 +68,3 @@ const createUser = async (req, res) => {
 };
 
 module.exports = { getAllUsers, getUser, createUser, createToken };
-
-
