@@ -1,7 +1,9 @@
 const User = require("../model/userSchema");
+const UserVerification = require("../model/UserVerificationSchema");
+const path = require("path");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { sendMail } = require("../mailer/mail");
+const { sendMail, sendVerificationEmail } = require("../mailer/mail");
 const { handleErr } = require("../errors/custom-error");
 const { ObjectId } = require("mongodb");
 
@@ -53,9 +55,8 @@ const createUser = async (req, res) => {
       email,
       password: hashedPassword,
     });
-    const subject = "Welcome to AutoMobid";
-    const message = `Welcome to AutoMotoBids! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
-    sendMail(user.email, subject, user.userName, message);
+    //send verification email
+    sendVerificationEmail(user, res);
     const accessToken = createToken(email, user._id);
     res
       .status(201)
@@ -66,5 +67,84 @@ const createUser = async (req, res) => {
     res.status(500).json(err);
   }
 };
+const verifyUser = async (req, res) => {
+  const { userId, uniqueString } = req.params;
 
-module.exports = { getAllUsers, getUser, createUser, createToken };
+  const userVerification = await UserVerification.find({ userId });
+  if (userVerification.length > 0) {
+    const { expiresAt } = userVerification[0];
+    const hashedUniqueString = userVerification[0].uniqueString;
+    1;
+    //checking for expired unique string
+    if (expiresAt < Date.now()) {
+      //record has expired so we delete it
+      try {
+        await UserVerification.deleteOne({ userId });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        return res.redirect("/api/v1/auth/user/verified/error");
+      }
+    } else {
+      //valid record exists so we validate the user string
+
+      //compare
+      try {
+        const UniqueStringCheck = await bcrypt.compare(
+          uniqueString,
+          hashedUniqueString
+        );
+        if (UniqueStringCheck) {
+          //strings match
+          try {
+            await User.updateOne({ _id: userId }, { isVerified: true });
+            try {
+              await UserVerification.deleteOne({ userId });
+            } catch (error) {
+              console.log(error);
+              console.log("Could not delete user verification record");
+            }
+            //send greeting mail
+            const user = await User.findOne({ _id: userId });
+            const subject = "Welcome to AutoMobid";
+            const message = `Welcome to AutoMotoBids! 🎉 Where the roads to your dream car are always open! Stay tuned for a seamless buying and selling of quality cars.`;
+            sendMail(user.email, subject, user.userName, message);
+
+            return res.redirect("/api/v1/auth/user/verified/");
+          } catch (error) {
+            console.log(error);
+            console.log("could not verify user");
+            return res.redirect("/api/v1/auth/user/verified/error");
+          }
+        } else {
+          //existing record but incorrect verification details passed
+          console.log("Invalid credentials");
+          return res.redirect("/api/v1/auth/user/verified/error");
+        }
+      } catch (error) {
+        console.log(error);
+        console.log("Error occured while trying to compare string");
+        return res.redirect("/api/v1/auth/user/verified/error");
+      }
+    }
+  } else {
+    //user verification does not exist
+    return res.redirect("/api/v1/auth/user/verified/error");
+  }
+};
+
+const userHasbeenVerified = (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/verified.html"));
+};
+const userHasNotbeenVerified = (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/verifiedFailed.html"));
+};
+module.exports = {
+  getAllUsers,
+  getUser,
+  createUser,
+  createToken,
+  verifyUser,
+  userHasbeenVerified,
+  userHasNotbeenVerified,
+};
