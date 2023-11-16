@@ -25,6 +25,10 @@ const userSchema = Schema(
       type: String,
       required: [true, "Please provide password"],
     },
+    isVerified:{
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );
@@ -34,11 +38,16 @@ userSchema.statics.login = async function (email, password) {
   if (!user) {
     throw new Error("Incorrect Email");
   }
-  const passwordCheck = await bcrypt.compare(password, user.password);
-  if (!passwordCheck) {
-    throw new Error("Incorrect password");
+  if (user.isVerified) {
+    const passwordCheck = await bcrypt.compare(password, user.password);
+    if (!passwordCheck) {
+      throw new Error("Incorrect password");
+    } 
+    return user;
   }
-  return user;
+  else{
+    throw new Error('User is not verified')
+  }
 };
 
 const User = mongoose.model("User", userSchema);
