@@ -9,5 +9,9 @@ const userValidationSchema = yup.object({
 const subscriberValidationSchema = yup.object({
     email: yup.string().email('Please provide a valid email').required('Plese provide email')
 })
+const userLoginSchema = yup.object({
+    email: yup.string().email('Please provide a valid email').required('Plese provide email'),
+    password: yup.string().min(6, 'Password must be at least 6 character length').required('Please provide password')
+})
 
-module.exports = {userValidationSchema, subscriberValidationSchema}
+module.exports = {userValidationSchema, subscriberValidationSchema,userLoginSchema}
