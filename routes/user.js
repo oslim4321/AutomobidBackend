@@ -1,6 +1,6 @@
 const express = require('express')
 const { getAllUsers, getUser, createUser, verifyUser, userHasbeenVerified, userHasNotbeenVerified } = require('../controller/user')
-const { loginUser } = require('../controller/auth')
+const { loginUser, resetUserPassword } = require('../controller/auth')
 const { authenticateToken } = require('../middleware/verifyToken');
 const validation = require('../middleware/validation');
 const { userValidationSchema, userLoginSchema } = require('../validation/validationSchemas');
@@ -14,5 +14,6 @@ UserRoute.post('/login', validation(userLoginSchema),loginUser)
 UserRoute.get('/user/verify/:userId/:uniqueString', verifyUser)
 UserRoute.get('/user/verified', userHasbeenVerified)
 UserRoute.get('/user/verified/error', userHasNotbeenVerified)
+UserRoute.post('/user/requestPasswordReset', resetUserPassword)
 
 module.exports = UserRoute;
