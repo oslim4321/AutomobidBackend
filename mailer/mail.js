@@ -536,6 +536,12 @@ const sendVerificationEmail = async ({ _id, email, userName }, res) => {
 };
 
 const sendResetEmail = async ({_id,email, userName}, redirectUrl, res)=>{
+  if (!redirectUrl) {
+    return res.status(400).json({
+      status: "FAILED",
+      message: "Please provide the redirect url",
+    })
+  }
   const resetString = uuidv4() + _id
 
   //clear existing records
