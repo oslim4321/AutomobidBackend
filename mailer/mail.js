@@ -176,7 +176,7 @@ const sendMail = async (email, subjects, userName = "", message) => {
   });
 };
 
-const sendVerificationEmail = async ({ _id, email }, res) => {
+const sendVerificationEmail = async ({ _id, email, userName }, res) => {
   //url to be used in email
   const currentUrl = "https://automobidbackend.onrender.com/api/v1/auth/"; //Todo: Update current Url
 
@@ -405,8 +405,8 @@ const sendVerificationEmail = async ({ _id, email }, res) => {
   </head>
   <body>
     <div class="container">
-      <p>Hello,</p>
-      <p>Thank you for signing up! To complete your registration, please click the button below to verify your email address:</p>
+      <p>Hello ${userName},</p>
+      <p>Welcome to Automobid! Thank you for signing up. To complete your registration, please click the button below to verify your email address:</p>
   
       <a class="button" href="${currentUrl + "user/verify/" + _id + "/" + uniqueString}">Verify Email</a>
   
