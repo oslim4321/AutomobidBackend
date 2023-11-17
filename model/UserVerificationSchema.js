@@ -6,7 +6,6 @@ const userVerificationSchema = Schema(
     userId: {
       type: String,
       required: [true, "Please enter email"],
-      unique: true,
     },
     uniqueString: {
       type: String,
