@@ -54,14 +54,14 @@ const actuallyResetUserPassword = async (req, res) => {
     if (newPasswordReset === null) {
       return res
         .status(404)
-        .json({ message: "Password reset request not found" });
+        .json({ message: "Invalid or expired reset token. Please initiate the password reset process again." });
     }
     const { expiresAt } = newPasswordReset;
     if (expiresAt < Date.now()) {
       try {
         await PasswordReset.deleteOne({ userId });
         return res
-          .status(404)
+          .status(400)
           .json({ message: "Password reset link has expired" });
       } catch (error) {
         console.log(error);
@@ -119,7 +119,7 @@ const actuallyResetUserPassword = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res
-      .status(404)
+      .status(500)
       .json({ message: "Checking for existing password reset record failed" });
   }
 };
