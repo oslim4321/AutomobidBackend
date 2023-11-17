@@ -549,7 +549,7 @@ const sendResetEmail = async ({_id,email, userName}, redirectUrl, res)=>{
     const randomNum = Math.floor((Math.random() * 1000000) +1) 
     await PasswordReset.deleteMany({userId:_id})
     const message = "We received a request to reset your password. To complete the process, click the link below:";
-    const Exp_message = `This link <b>expires in 1 hours</b>. <p><a href=${
+    const Exp_message = `This link <b>expires in 1 hours</b>. <p><a class="button hover:bg-#4AD491:hover" href=${
       redirectUrl + `/${randomNum}?userId=${_id}&resetString=${resetString}` 
     }>Reset Password</a></p>`;  
     const Ignoremessage = "If you didn't request this change, please ignore this email. Your password will remain unchanged."
@@ -591,11 +591,28 @@ const sendResetEmail = async ({_id,email, userName}, redirectUrl, res)=>{
           line-height: 1px;
           border-top: 1px dotted #c4c4c4;
         }
+        .button {
+          display: inline-block;
+          padding: 10px 20px;
+          font-size: 16px;
+          text-align: center;
+          text-decoration: none;
+          color: #fff;
+          background-color: rgb(74, 212, 147);
+          border: 2px solid rgb(74, 212, 147);
+          border-radius: 5px;
+          transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .hover\:bg-#4AD491:hover {
+          --tw-bg-opacity: 1;
+          background-color: rgb(74, 212, 145);
+        }
       </style>
     </head>
     <body>
       <div class="container">
-        <h1>Hello ${userName},</h1>
+        <h3>Hello ${userName},</h3>
         <p>${message}</p>
         <p>${Exp_message}</p>
         <p>${Ignoremessage}</p>
