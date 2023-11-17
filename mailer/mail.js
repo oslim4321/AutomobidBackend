@@ -408,7 +408,7 @@ const sendVerificationEmail = async ({ _id, email, userName }, res) => {
   </head>
   <body>
     <div class="container container-left">
-      <p>Hello ${userName},</p>
+      <h3>Hello ${userName},</h3>
       <p>Welcome to Automobid! Thank you for signing up. To complete your registration, please click the button below to verify your email address:</p>
   
       <a class="button" href="${currentUrl + "user/verify/" + _id + "/" + uniqueString}">Verify Email</a>
