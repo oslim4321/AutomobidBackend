@@ -178,7 +178,7 @@ const sendMail = async (email, subjects, userName = "", message) => {
 
 const sendVerificationEmail = async ({ _id, email, userName }, res) => {
   //url to be used in email
-  const currentUrl = "https://automobidbackend.onrender.com/api/v1/auth/"; //Todo: Update current Url
+  const currentUrl = process.env.CURRENT_URL; //Todo: Update current Url
 
   const uniqueString = uuidv4() + _id;
 
