@@ -90,7 +90,7 @@ const actuallyResetUserPassword = async (req, res) => {
             await PasswordReset.deleteOne({userId})
             res
               .status(200)
-              .json({ message: "Password has been reset successfully." });
+              .json({ message: "Password reset successful. You can now log in with your new password." });
             } catch (error) {
               console.log(error);
               res
