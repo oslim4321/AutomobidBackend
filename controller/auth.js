@@ -53,7 +53,7 @@ const actuallyResetUserPassword = async (req, res) => {
     const newPasswordReset = await PasswordReset.findOne({ userId });
     if (newPasswordReset === null) {
       return res
-        .status(404)
+        .status(401)
         .json({ message: "Invalid or expired reset token. Please initiate the password reset process again." });
     }
     const { expiresAt } = newPasswordReset;
@@ -61,7 +61,7 @@ const actuallyResetUserPassword = async (req, res) => {
       try {
         await PasswordReset.deleteOne({ userId });
         return res
-          .status(400)
+          .status(401)
           .json({ message: "Password reset link has expired" });
       } catch (error) {
         console.log(error);
@@ -90,7 +90,7 @@ const actuallyResetUserPassword = async (req, res) => {
             await PasswordReset.deleteOne({userId})
             res
               .status(200)
-              .json({ message: "Password reset successful. You can now log in with your new password." });
+              .json({ success:true,message: "Password reset successful. You can now log in with your new password.", status:'Successful' });
             } catch (error) {
               console.log(error);
               res
