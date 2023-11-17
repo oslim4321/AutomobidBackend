@@ -15,7 +15,7 @@ UserRoute.get('/user/verify/:userId/:uniqueString', verifyUser)
 UserRoute.get('/user/verified', userHasbeenVerified)
 UserRoute.get('/user/verified/error', userHasNotbeenVerified)
 UserRoute.post('/user/requestPasswordReset', resetUserPassword)
-UserRoute.post('/user/resetPassword', actuallyResetUserPassword)
+UserRoute.patch('/user/resetPassword', actuallyResetUserPassword)
 UserRoute.post('/user/verifyEmail', sendUserVerificationEmail)
 
 module.exports = UserRoute;
