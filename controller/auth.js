@@ -50,7 +50,7 @@ const actuallyResetUserPassword = async (req, res) => {
   const { userId, resetString, newPassword } = req.body;
 
   try {
-    const newPasswordReset = await PasswordReset.findOne({ _id:userId });
+    const newPasswordReset = await PasswordReset.findOne({ userId });
     if (newPasswordReset === null) {
       return res
         .status(404)
