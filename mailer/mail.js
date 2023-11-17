@@ -370,6 +370,10 @@ const sendVerificationEmail = async ({ _id, email, userName }, res) => {
         text-align: center; /* Center align the content inside the container */
       }
   
+      .container-left {
+        text-align: left; /* Align text to the left within this container */
+      }
+  
       p {
         color: #333;
         margin-bottom: 20px; /* Add some space below paragraphs */
@@ -404,7 +408,7 @@ const sendVerificationEmail = async ({ _id, email, userName }, res) => {
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="container container-left">
       <p>Hello ${userName},</p>
       <p>Welcome to Automobid! Thank you for signing up. To complete your registration, please click the button below to verify your email address:</p>
   
@@ -488,9 +492,8 @@ const sendVerificationEmail = async ({ _id, email, userName }, res) => {
     </div>
   </body>
   </html>
-  
   `
-  const mailOptions = {
+    const mailOptions = {
     from: "automobidcar@gmail.com",
     to: email,
     subject: "Verify your email",
