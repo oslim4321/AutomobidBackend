@@ -139,6 +139,21 @@ const userHasbeenVerified = (req, res) => {
 const userHasNotbeenVerified = (req, res) => {
   res.sendFile(path.join(__dirname, "../views/verifiedFailed.html"));
 };
+
+const sendUserVerificationEmail = async (req, res)=>{
+  const {email} = req.body
+  try {
+  const user = await User.findOne({email})
+  if (user === null) {
+    return res.status(404).json({message:'User not found'})
+  }
+  sendVerificationEmail(user,res) //send verification
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({message:'An error occured while trying to retrieve user details'})
+  }
+
+}
 module.exports = {
   getAllUsers,
   getUser,
@@ -147,4 +162,5 @@ module.exports = {
   verifyUser,
   userHasbeenVerified,
   userHasNotbeenVerified,
+  sendUserVerificationEmail
 };
