@@ -386,15 +386,14 @@ const sendVerificationEmail = async ({ _id, email, userName }, res) => {
         text-align: center;
         text-decoration: none;
         color: #fff;
-        background-color: #007bff;
-        border: 2px solid #007bff;
+        background-color: rgb(74, 212, 147);
+        border: 2px solid rgb(74, 212, 147);
         border-radius: 5px;
         transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
       }
   
       .button:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
+        background-color: rgb(74, 212, 145);
       }
   
       /* Additional styles for better spacing */
