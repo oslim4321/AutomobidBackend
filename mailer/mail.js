@@ -549,7 +549,7 @@ const sendResetEmail = async ({_id,email, userName}, redirectUrl, res)=>{
     await PasswordReset.deleteMany({userId:_id})
     const message = "We received a request to reset your password. To complete the process, click the link below:";
     const Exp_message = `This link <b>expires in 1 hours</b>. <p><a href=${
-      redirectUrl + "/" + _id + "/" + resetString
+      redirectUrl + `?userId=${_id}&resetString=${resetString}` 
     }>Reset Password</a></p>`;  
     const Ignoremessage = "If you didn't request this change, please ignore this email. Your password will remain unchanged."
     const html = `
